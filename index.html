@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FBBF24'%3E%3Cpath d='M16.9 9.1C16.9 9.1 16 4 20 4C20 4 21.3 8.1 16.9 9.1Z' /%3E%3Cpath d='M15.4 10.6C15.4 10.6 15.6 5.8 19.3 5.8C19.3 5.8 20.3 9.4 15.4 10.6Z' /%3E%3Cpath d='M14.5 11.5C14.5 11.5 15.2 7.1 18.5 7.1C18.5 7.1 19.2 10.3 14.5 11.5Z' /%3E%3Cpath d='M12.5 13.5C12.5 13.5 14.1 9.9 17.2 9.9C17.2 9.9 17.1 12.3 12.5 13.5Z' /%3E%3Cpath d='M11.6 14.4C11.6 14.4 13.6 11.4 16.6 11.4C16.6 11.4 16.1 13.4 11.6 14.4Z' /%3E%3Cpath d='M9.8 16.2C9.8 16.2 12.6 14.1 15.4 14.1C15.4 14.1 14.2 15.6 9.8 16.2Z' /%3E%3Cpath d='M8.3 17.7C8.3 17.7 11.8 16.3 14.5 16.3C14.5 16.3 12.9 17.5 8.3 17.7Z' /%3E%3Cpath d='M6.3 19.7C6.3 19.7 10.6 19 13.3 19C13.3 19 11.3 20 6.3 19.7Z' /%3E%3C/svg%3E">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <meta http-equiv="Permissions-Policy" content="payment=*">
+    <title>Reimagine Photos - Nano Banana AI Image Editor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://js.stripe.com/v3/?advancedFraudSignals=false"></script>
+    <!-- Facebook Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Reimagine Photos – Effortless AI Photo Editing">
+<meta property="og:description" content="Edit your images instantly with AI-powered preset filters. Refurbish, colorize, sharpen, and more – no technical skills required. Try it free!">
+<meta property="og:image" content="https://reimaginephotos.app/ogimage.jpg">
+<meta property="og:image:alt" content="Screenshot of the Reimagine Photos Image Editor interface with AI editing options.">
+<meta property="og:url" content="https://reimaginephotos.app/">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Reimagine Photos – Effortless AI Photo Editing">
+<meta name="twitter:description" content="1-click AI editing: refurbish, colorize, sharpen, blur backgrounds, and more. Try the Reimagine Photos Image Editor now!">
+<meta name="twitter:image" content="https://reimaginephotos.app/ogimage.jpg">
+<meta name="twitter:image:alt" content="Screenshot of the Reimagine Photos Image Editor interface with AI editing presets.">
+<meta name="twitter:site" content="@usefulaihacks">
+<meta name="twitter:creator" content="@usefulaihacks">
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2X5LGNNG9C"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-2X5LGNNG9C');
+</script>
+
+    <style>
+      body {
+        background-color: #111827; /* bg-gray-900 */
+        font-family: sans-serif;
+      }
+      .hidden {
+        display: none;
+      }
+      .flex { display: flex; }
+    </style>
+<!-- Firebase SDK (Compat) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script type="importmap">
+{
+  "imports": {
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.20.0",
+    "firebase-admin": "https://aistudiocdn.com/firebase-admin@^13.5.0",
+    "firebase-functions": "https://aistudiocdn.com/firebase-functions@^6.4.0"
+  }
+}
+</script>
+</head>
+<body class="bg-gray-900 text-gray-200">
+
+    <!-- Final Config Section -->
+    <div id="config-needed-section" class="hidden min-h-screen flex flex-col items-center justify-center p-4">
+        <div class="w-full max-w-lg bg-gray-800 rounded-2xl shadow-2xl p-8 border border-gray-700">
+            <h2 class="text-3xl font-bold text-center text-yellow-400 mb-4">Final Step: Add Your API Keys</h2>
+            <p class="text-center text-gray-300 mb-8">Your Google Cloud project is configured. The last step is to add your project's unique API keys to the application code.</p>
+            
+            <div class="space-y-6">
+                <!-- Gemini API Key -->
+                <div id="gemini-key-prompt" class="hidden bg-gray-700/50 p-6 rounded-lg">
+                    <h3 class="font-semibold text-xl text-white mb-2">Gemini API Key is missing.</h3>
+                    <p class="text-gray-400 mb-4">The AI image editing features require a Gemini API key. Please replace the placeholder in the <code class="bg-gray-900 px-1.5 py-0.5 rounded-md text-sm font-mono">firebaseConfig.js</code> file with your own.</p>
+                    <a href="https://aistudio.google.com/app/apikey" target="_blank" class="inline-block bg-yellow-400 text-gray-900 font-bold py-2 px-4 rounded-lg hover:bg-yellow-500 transition-colors">
+                        Get Your Gemini API Key &rarr;
+                    </a>
+                </div>
+                
+                <!-- Stripe API Key -->
+                <div id="stripe-key-prompt" class="hidden bg-gray-700/50 p-6 rounded-lg">
+                    <h3 class="font-semibold text-xl text-white mb-2">Stripe Publishable Key is missing.</h3>
+                    <p class="text-gray-400 mb-4">To allow users to purchase credits, you need to add your Stripe Publishable Key to the <code class="bg-gray-900 px-1.5 py-0.5 rounded-md text-sm font-mono">firebaseConfig.js</code> file. You can use your Test key (`pk_test_...`) to test the payment flow.</p>
+                    <a href="https://dashboard.stripe.com/apikeys" target="_blank" class="inline-block bg-gray-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-500 transition-colors">
+                        Get Your Stripe Key &rarr;
+                    </a>
+                </div>
+            </div>
+
+            <p class="text-center text-gray-500 mt-8 text-sm">After updating the <code class="bg-gray-900 px-1 py-0.5 rounded font-mono">firebaseConfig.js</code> file, please refresh this page.</p>
+        </div>
+    </div>
+
+    <div id="app-container" class="hidden min-h-screen flex flex-col items-center justify-center p-4">
+        
+        <div id="auth-view" class="w-full text-center pb-12">
+            <div class="w-full flex justify-center mb-6">
+                <img src="https://reimaginephotos.app/Re-Imagine-Photos-banana-logo.jpg" alt="Reimagine Photos Logo" class="w-4/5 max-w-md">
+            </div>
+
+            <div class="mb-8 max-w-2xl mx-auto px-4">
+                <h2 class="text-xl md:text-2xl font-bold text-white uppercase tracking-wider leading-tight" style="font-family: 'Comic Sans MS', cursive, sans-serif; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">Reimagine & Edit Photos with Preset AI Image Editing Features to Remaster Old Memories and Bring Back Life Into Your Photos!</h2>
+                <p class="mt-4 text-lg md:text-xl font-bold text-yellow-400 uppercase" style="font-family: 'Comic Sans MS', cursive, sans-serif; text-shadow: 1px 1px 2px rgba(0,0,0,0.7);">Try it out today, free!</p>
+                <p class="mt-2 text-base md:text-lg text-gray-300">Get 10 free image editing credits when you sign-up free!</p>
+            </div>
+        
+            <!-- Auth Section -->
+            <div class="w-full max-w-sm mx-auto">
+                <div class="bg-gray-800 rounded-2xl shadow-2xl p-8">
+                    <h2 id="auth-title" class="text-3xl font-bold text-center text-yellow-400 mb-6">Create an Account</h2>
+                    <form id="auth-form" class="space-y-4">
+                        <input type="email" id="email-input" placeholder="Email" required class="w-full bg-gray-700 text-white px-4 py-3 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                        <input type="password" id="password-input" placeholder="Password (min. 6 characters)" required class="w-full bg-gray-700 text-white px-4 py-3 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                        <p id="auth-error" class="text-sm text-red-400 text-center min-h-4"></p>
+                        <button type="submit" id="auth-button" class="w-full bg-yellow-400 text-gray-900 font-bold py-3 rounded-lg hover:bg-yellow-500 transition-colors">Sign Up</button>
+                    </form>
+                    <div id="or-separator" class="my-6 flex items-center">
+                        <div class="flex-grow border-t border-gray-600"></div>
+                        <span class="flex-shrink mx-4 text-gray-400 text-sm">OR</span>
+                        <div class="flex-grow border-t border-gray-600"></div>
+                    </div>
+                    <button type="button" id="google-signin-btn" class="w-full bg-white text-gray-700 font-semibold py-2.5 px-4 rounded-lg border border-gray-300 hover:bg-gray-100 transition-colors flex items-center justify-center gap-3 disabled:opacity-50">
+                        <svg class="w-5 h-5" viewBox="0 0 48 48" aria-hidden="true">
+                            <path fill="#4285F4" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4C12.955 4 4 12.955 4 24s8.955 20 20 20s20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"></path>
+                            <path fill="#34A853" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4C16.318 4 9.656 8.337 6.306 14.691z"></path>
+                            <path fill="#FBBC05" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238C29.211 35.091 26.715 36 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"></path>
+                            <path fill="#EA4335" d="M43.611 20.083H24v8h11.303c-.792 2.237-2.231 4.166-4.087 5.571l6.19 5.238C42.069 34.195 44 29.592 44 24c0-1.341-.138-2.65-.389-3.917z"></path>
+                        </svg>
+                        Continue with Google
+                    </button>
+                    <div class="flex justify-between items-center mt-6 text-sm">
+                        <a href="#" id="auth-toggle" class="text-yellow-400 hover:text-yellow-300">Already have an account? Log In</a>
+                        <a href="#" id="forgot-password-link" class="text-gray-400 hover:text-gray-300 hidden">Forgot Password?</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main App Section -->
+        <main id="app-section" class="hidden w-full max-w-7xl mx-auto p-4 md:p-6 lg:p-8">
+            <!-- Header -->
+            <header class="flex flex-wrap justify-between items-center gap-4 mb-6">
+                <div class="flex items-center gap-3">
+                    <img src="https://reimaginephotos.app/Re-Imagine-Photos-banana-logo.jpg" alt="Logo" class="w-10 h-10 rounded-full">
+                    <h1 class="text-xl md:text-2xl font-bold text-white">Reimagine Photos</h1>
+                </div>
+                <div id="user-info" class="hidden flex items-center gap-4 bg-gray-800 px-4 py-2 rounded-full">
+                    <div class="flex items-center gap-2 text-yellow-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 0V6m0 12v-2m4.95-7.05l1.414-1.414M5.636 18.364l1.414-1.414m11.314 0l-1.414-1.414M6.05 6.05l-1.414-1.414M12 21a9 9 0 110-18 9 9 0 010 18z" /></svg>
+                        <span id="credits-display" class="font-bold text-lg">0</span>
+                        <span class="text-sm text-gray-300">Credits</span>
+                    </div>
+                    <button id="get-credits-btn" onclick="document.getElementById('pricing-modal').classList.remove('hidden')" class="bg-yellow-400 text-gray-900 font-semibold px-4 py-1.5 rounded-full text-sm hover:bg-yellow-500 transition-colors">Get More</button>
+                    <button id="logout-btn" class="text-gray-400 hover:text-white transition-colors" aria-label="Log Out">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+                        Logout
+                    </button>
+                </div>
+            </header>
+
+            <!-- Error Box -->
+            <div id="error-box" class="hidden bg-red-900/50 border border-red-700 text-red-300 px-4 py-3 rounded-lg relative mb-6" role="alert">
+                <strong class="font-bold">Error:</strong>
+                <span id="error-message" class="block sm:inline">Something went wrong.</span>
+            </div>
+
+            <!-- Welcome Message -->
+            <div id="welcome-message" class="text-center text-gray-300 mb-6 max-w-3xl mx-auto">
+                <p>Add your image below to begin remastering and reimagining your image using state-of-the-art predefined Nano Banana AI image editing presets.</p>
+            </div>
+
+            <!-- Image Uploader -->
+            <section id="uploader-section" class="w-full">
+                <div class="max-w-3xl mx-auto bg-gray-800/50 border-2 border-dashed border-gray-600 rounded-2xl p-8 text-center">
+                    <label id="dropzone-label" for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 cursor-pointer hover:bg-gray-700/30 transition-colors rounded-xl">
+                        <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                            <svg class="w-10 h-10 mb-4 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/></svg>
+                            <p class="mb-2 text-sm text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                            <p class="text-xs text-gray-500">PNG, JPG or WEBP (MAX. 15MB)</p>
+                        </div>
+                        <input id="dropzone-file" type="file" class="hidden" accept="image/png, image/jpeg, image/webp" />
+                    </label>
+                    <p id="uploader-error" class="mt-4 text-sm text-red-400 min-h-5"></p>
+                </div>
+            </section>
+
+            <!-- Image Editor -->
+            <section id="editor-section" class="hidden">
+                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Left Column: Image Viewer -->
+                    <div class="lg:col-span-2 bg-gray-800/50 rounded-2xl p-4 flex flex-col items-center justify-center relative min-h-[400px] lg:min-h-[600px]">
+                        <div class="relative w-full h-full flex items-center justify-center">
+                            <img id="image-display" src="" alt="Uploaded image" class="max-w-full max-h-[80vh] object-contain rounded-lg shadow-lg">
+                            <div id="spinner-container" class="hidden absolute inset-0 bg-gray-900/80 backdrop-blur-sm rounded-lg flex-col items-center justify-center text-center p-4">
+                               <svg class="animate-spin -ml-1 mr-3 h-10 w-10 text-yellow-400 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                <p id="loading-message" class="text-lg font-semibold text-white">Processing...</p>
+                                <p class="text-sm text-gray-300 mt-1">Good things take time. Please be patient.</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 flex flex-wrap gap-4">
+                            <button id="change-image-btn" class="bg-gray-600 text-white font-semibold py-2 px-5 rounded-lg hover:bg-gray-500 transition-colors">Change Image</button>
+                            <button id="download-btn" class="hidden bg-yellow-400 text-gray-900 font-bold py-2 px-5 rounded-lg hover:bg-yellow-500 transition-colors">Download</button>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Presets -->
+                    <div class="lg:col-span-1 bg-gray-800/50 rounded-2xl p-4">
+                        <h2 class="text-lg font-bold text-white mb-4 text-center">Choose an Edit</h2>
+                        <div id="preset-container" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-3">
+                            <!-- Presets will be dynamically inserted here -->
+                        </div>
+                        <!-- Interactive controls -->
+                        <div id="interactive-controls" class="hidden mt-4 pt-4 border-t border-gray-700">
+                           <div id="item-removal-section" class="hidden space-y-2">
+                               <label for="removal-prompt-input" class="text-sm font-medium text-gray-300">What should be removed?</label>
+                               <input type="text" id="removal-prompt-input" placeholder="e.g., the person in red" class="w-full bg-gray-700 text-white px-3 py-2 rounded-md border border-gray-600 focus:outline-none focus:ring-1 focus:ring-yellow-500">
+                               <button id="removal-submit-btn" class="w-full bg-yellow-400 text-gray-900 font-bold py-2 rounded-md hover:bg-yellow-500 transition-colors">Apply</button>
+                           </div>
+                           <div id="custom-prompt-section" class="hidden space-y-2">
+                               <label for="custom-prompt-textarea" class="text-sm font-medium text-gray-300">Describe the edit you want:</label>
+                               <textarea id="custom-prompt-textarea" rows="3" placeholder="e.g., make the sky a vibrant purple" class="w-full bg-gray-700 text-white px-3 py-2 rounded-md border border-gray-600 focus:outline-none focus:ring-1 focus:ring-yellow-500"></textarea>
+                               <button id="custom-submit-btn" class="w-full bg-yellow-400 text-gray-900 font-bold py-2 rounded-md hover:bg-yellow-500 transition-colors">Apply</button>
+                           </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <footer class="text-center text-gray-500 mt-8 text-sm px-4">
+        <p>
+            &copy;<span id="copyright-year"></span> Reimagine Photos. All Rights Reserved. Powered by Google's Nano Banana API.<br/>For Creative Exploration &amp; Entertainment Use Only. 
+            Developed by: <a href="https://appandwebdevelopers.com" target="_blank" class="text-yellow-400 hover:underline">App and Web Developers</a>.
+        </p><br/>
+    </footer>
+    
+    <!-- Pricing Modal -->
+    <div id="pricing-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4">
+        <div class="bg-gray-800 rounded-2xl max-w-lg w-full p-8 shadow-2xl border border-gray-700 relative">
+            <button id="close-modal-btn" class="absolute top-4 right-4 text-gray-400 hover:text-white" aria-label="Close">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+            <h2 class="text-3xl font-bold text-center text-yellow-400 mb-2">Need More Credits</h2>
+            <p class="text-center text-gray-300 mb-8">Please purchase more credits to continue editing.</p>
+            <div id="purchase-options" class="space-y-4">
+                 <button data-price-id="price_1S6DOgFf71bDGdCeyoNuqlh1" data-mode="payment" class="w-full text-left bg-gray-700/80 p-5 rounded-lg hover:bg-gray-700 transition-colors flex justify-between items-center">
+                    <div>
+                        <p class="font-bold text-lg text-white">50 Credits</p>
+                        <p class="text-sm text-gray-400">One-time payment.</p>
+                    </div>
+                    <span class="text-xl font-bold text-yellow-400">$6.99</span>
+                </button>
+                <button data-price-id="price_1S6DWJFf71bDGdCeDBwi5S9I" data-mode="subscription" class="w-full text-left bg-gray-700/80 p-5 rounded-lg hover:bg-gray-700 transition-colors flex justify-between items-center border-2 border-yellow-400 shadow-lg">
+                     <div>
+                        <p class="font-bold text-lg text-white">150 Credits / month <span class="text-sm text-yellow-400">(Best Value)</span></p>
+                        <p class="text-sm text-gray-400">Renews automatically each month.</p>
+                    </div>
+                    <span class="text-xl font-bold text-yellow-400">$15/mo</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Error Modal -->
+    <div id="error-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4">
+        <div class="bg-gray-800 rounded-2xl max-w-md w-full p-8 shadow-2xl border border-red-700 relative">
+            <h2 id="error-modal-title" class="text-2xl font-bold text-center text-red-400 mb-4">Error</h2>
+            <div id="error-modal-content" class="text-center text-gray-300 mb-6">
+                <!-- Error content injected here -->
+            </div>
+            <button id="close-error-modal-btn" class="w-full bg-red-600 text-white font-bold py-2 rounded-lg hover:bg-red-700 transition-colors">Close</button>
+        </div>
+    </div>
+
+    <script type="module" src="./index.js"></script>
+</body>
+</html>
