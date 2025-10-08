@@ -2,7 +2,7 @@
 // You can get this from the Firebase Console:
 // Project Settings > General > Your apps > Firebase SDK snippet > Config
 export const firebaseConfig = {
-  apiKey: "AIzaSyBVd2JmxXyX3wN2IWbINqoyofvzEafL4-o",
+  apiKey: "XXXXXXXXX",
   authDomain: "nanobanana-image-app.firebaseapp.com",
   projectId: "nanobanana-image-app",
   storageBucket: "nanobanana-image-app.appspot.com",
