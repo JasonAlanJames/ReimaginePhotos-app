@@ -18,4 +18,4 @@ export const firebaseConfig = {
 // Get your Stripe Publishable key from the Stripe Dashboard: https://dashboard.stripe.com/apikeys
 // You can use your "Test" key (it starts with pk_test_) to test payments.
 
-export const STRIPE_PUBLISHABLE_KEY = "pk_live_w4KxwMA4ARX3WOaBaBVB4vPp";
+export const STRIPE_PUBLISHABLE_KEY = "pk_live_XXXXXXXXXX";
